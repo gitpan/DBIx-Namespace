@@ -1,5 +1,5 @@
 package DBIx::Namespace;
-our $VERSION = 0.03;
+our $VERSION = 0.04;
 use strict;
 use warnings;
 use DBI qw(:DEFAULT :sql_types);
@@ -70,10 +70,10 @@ sub new {
     $opt->{password} = $ENV{DBI_PASS}	unless defined $opt->{password};
     $opt->{database} = 'test'           unless defined $opt->{database};
     $opt->{dbsource} = "DBI:mysql:"	unless defined $opt->{dbsource};
-    croak "User required" unless $opt->{user};
-    croak "Password required" unless $opt->{password};
+    die "User required\n" unless $opt->{user};
+    die "Password required\n" unless $opt->{password};
     $o->{dbh} = DBI->connect($opt->{dbsource}, $opt->{user}, $opt->{password}, {RaiseError => 1, PrintError => 0})
-	or croak "Cannot connect to '$opt->{dbsource}'\n";
+	or die "Cannot connect to '$opt->{dbsource}'\n";
     
     my @databases = $o->sql_show("databases");
     $o->{dbh}->do("create database $opt->{database}") unless search_array(\@databases, $opt->{database});
@@ -226,7 +226,7 @@ sub delete {
 	}
     }
     my $tbl = $sqltbl[0][0];
-    croak "Unable to delete '$name', the SQL table is missing" unless ($tbl and $iname);
+    die "Unable to delete '$name', the SQL table is missing\n" unless ($tbl and $iname);
     if ($where) {
 	$o->{dbh}->do("delete from $tbl where $where", undef, @values);
     } else {
@@ -348,7 +348,7 @@ obtain the SQL table name needed.
 sub select_hash {
     my ($o, $table, $clause, @values) = @_;
     my $tbl = $o->table($table);
-    croak 'A where clause is required' unless $clause;
+    die "A where clause is required\n" unless $clause;
     my $r = $o->{dbh}->selectrow_hashref("select * from $tbl $clause", undef, @values);
     return $r;    
 }
@@ -383,8 +383,8 @@ Returns a reference to a hash keyed by field names.
 sub select_one {
     my ($o, $table, $columns, $clause, @values) = @_;
     my $tbl = $o->table($table);
-    croak 'At least one column name is required' unless $columns;
-    croak 'A where clause is required' unless $clause;
+    die "At least one column name is required\n" unless $columns;
+    die "A where clause is required\n" unless $clause;
     return $o->{dbh}->selectrow_array("select $columns from $tbl $clause", undef, @values);
 }
 
@@ -477,12 +477,12 @@ sub table {
 	my @tables = split('::', $name);
 	foreach my $uname (@tables) {
 	    my $tbl = $sqltbl[0][0];
-	    croak "No SQL table for '$name'" unless ($tbl and $o->sql_exists($tbl));
+	    die "No SQL table for '$name'\n" unless ($tbl and $o->sql_exists($tbl));
 	    @sqltbl = $o->sql_select(qq(sqlname from $sqltbl[0][0] where username = ?), $uname);
 	}
     }
     my $tbl = $sqltbl[0][0];
-    croak "No SQL table for '$name'" unless ($tbl and $o->sql_exists($tbl));
+    die "No SQL table for '$name'\n" unless ($tbl and $o->sql_exists($tbl));
     return $tbl;
 }
 
@@ -579,7 +579,7 @@ Examples
 
 sub sql_exists {
     my ($o, $table) = @_;
-    croak "No table specified" unless $table;
+    die "No table specified\n" unless $table;
     my $tables = $o->{dbh}->selectall_arrayref("show tables");
     return search_array($tables, $table) ? 1 : 0;
 }
@@ -626,8 +626,6 @@ Used in recursive calls for building names.
 =item level
 
 Used in recursive calls for indenting output.
-
-=back
 
 =back
 

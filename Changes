@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Namespace.
 
+0.04  Sun Jun  8 12:45:28 GMT 2003
+	replace croak with die to make cleaner error reports
+
 0.01  Sun Feb  2 15:40:12 2003
 	- original version; created by h2xs 1.22 with options
 		-X -n DBIx::Namespace
