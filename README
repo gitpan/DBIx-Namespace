@@ -1,0 +1,42 @@
+DBIx/Namespace version 0.03
+===========================
+
+One of the limitations of SQL is that the tables lie
+within a flat namespace.  This module provides
+a directory-like partitioning, allowing identical table
+names to co-exist within the same database.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+    DBI, plus the DBD driver for the desired database
+
+TESTING
+
+The tests included automatically are trivial as any
+serious testing requires a suitably configured database.
+Within the 't' directory there is a file '01basic.pl'
+which gives a little exercise to create, delete, select
+and replace operations.  The top of the file holds
+settings for database, user and password, which would need
+editing first.
+
+COPYRIGHT AND LICENCE
+
+Put the correct copyright and licence information here.
+
+Copyright (C) 2003 Christopher Willmot
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+

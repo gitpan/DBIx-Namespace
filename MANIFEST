@@ -1,0 +1,7 @@
+Changes
+MANIFEST
+Makefile.PL
+Namespace.pm
+README
+t/01basic.pl
+t/1.t
